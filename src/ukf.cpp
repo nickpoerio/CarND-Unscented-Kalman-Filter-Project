@@ -118,6 +118,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
     UpdateLidar(measurement_pack);
   }
+}
 
 /**
  * Predicts sigma points, the state, and the state covariance matrix.
@@ -318,6 +319,9 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   P_ = P_ - K*S*K.transpose();
   
   double NIS = z_diff.transpose()*S.transpose()*z_diss;
+  
+  //print NIS
+  cout << "NIS: " << NIS << endl;
 }
 
 /**
@@ -410,5 +414,8 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   P_ = P_ - K*S*K.transpose();
   
   double NIS = z_diff.transpose()*S.transpose()*z_diss;
+  
+  //print NIS
+  cout << "NIS: " << NIS << endl;
 
 }
