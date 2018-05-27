@@ -91,16 +91,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     float py = meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
   
     x_ << px, py, 0, 0, 0;
+	P_(0,0) = std_radr_*std_radr_;
 	P_(1,1) = std_radr_*std_radr_;
-	P_(2,2) = std_radr_*std_radr_;
   }
   else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
     /**
     Initialize state.
     */
     x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
-	P_(1,1) = std_laspx_*std_laspx_;
-	P_(2,2) = std_laspy_*std_laspy_;
+	P_(0,0) = std_laspx_*std_laspx_;
+	P_(1,1) = std_laspy_*std_laspy_;
   }
   time_us_ = meas_package.timestamp_;
   // done initializing, no need to predict or update
@@ -321,7 +321,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   double NIS = z_diff.transpose()*S.transpose()*z_diff;
   
   //print NIS
-  //cout << "NIS: " << NIS << endl;
+  cout << "NIS: " << NIS << endl;
 }
 
 /**
@@ -416,6 +416,6 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   double NIS = z_diff.transpose()*S.transpose()*z_diff;
   
   //print NIS
-  //cout << "NIS: " << NIS << endl;
+  cout << "NIS: " << NIS << endl;
 
 }
