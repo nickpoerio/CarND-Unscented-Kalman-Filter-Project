@@ -143,7 +143,7 @@ void UKF::Prediction(double delta_t) {
   for (int i = 0; i < n_x_; i++)
   {
     Xsig_pred_.col(i+1)     = x_ + sqrt(lambda_+n_x_) * A_.col(i);
-    Xsig_pred_.col(i+1+n_x) = x_ - sqrt(lambda_+n_x_) * A_.col(i);
+    Xsig_pred_.col(i+1+n_x_) = x_ - sqrt(lambda_+n_x_) * A_.col(i);
   }
 
   //create augmented mean vector
@@ -174,7 +174,7 @@ void UKF::Prediction(double delta_t) {
   for (int i = 0; i< n_aug_; i++)
   {
     Xsig_aug_.col(i+1)       = x_aug_ + sqrt(lambda_+n_aug_) * L.col(i);
-    Xsig_aug_.col(i+1+n_aug) = x_aug_ - sqrt(lambda_+n_aug_) * L.col(i);
+    Xsig_aug_.col(i+1+n_aug_) = x_aug_ - sqrt(lambda_+n_aug_) * L.col(i);
   }
   
    //predict sigma points
