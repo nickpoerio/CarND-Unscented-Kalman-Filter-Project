@@ -107,8 +107,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   is_initialized_ = true;
   return;
   
-  double dt = (meas_package.timestamp_ - previous_timestamp_) / 1000000.0;	//dt - expressed in seconds
-  previous_timestamp_ = meas_package.timestamp_;
+  double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;	//dt - expressed in seconds
+  time_us_ = meas_package.timestamp_;
   
   Prediction(dt);
   
