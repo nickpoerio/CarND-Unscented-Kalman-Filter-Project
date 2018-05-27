@@ -318,7 +318,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   x_ = x_ + K * z_diff;
   P_ = P_ - K*S*K.transpose();
   
-  double NIS = z_diff.transpose()*S.transpose()*z_diff;
+  VectorXd NIS = z_diff.transpose()*S.transpose()*z_diff;
   
   //print NIS
   cout << "NIS: " << NIS << endl;
@@ -413,7 +413,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   x_ = x_ + K * z_diff;
   P_ = P_ - K*S*K.transpose();
   
-  double NIS = z_diff.transpose()*S.transpose()*z_diff;
+  VectorXd NIS = z_diff.transpose()*S.transpose()*z_diff;
   
   //print NIS
   cout << "NIS: " << NIS << endl;
