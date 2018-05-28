@@ -104,7 +104,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
 	  P_(0,0) = std_laspx_*std_laspx_;
 	  P_(1,1) = std_laspy_*std_laspy_;
     }
-
+    time_us_ = meas_package.timestamp_;
     // done initializing, no need to predict or update
     is_initialized_ = true;
     return;
