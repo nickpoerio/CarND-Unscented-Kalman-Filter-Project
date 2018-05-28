@@ -80,7 +80,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   */
   if (!is_initialized_) {
     // first measurement
-    x_ << 1, 1, 1, 1, 1;
+    x_ << 1, 1, 1, 1, 0.1;
     P_ = MatrixXd::Identity(5,5);
     
     if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
@@ -90,7 +90,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       float px = meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]);
       float py = meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
     
-      x_ << px, py, 0, 0, 0;
+      x_(0,0) << px;
+	  x_(1,1) << py;
 	  P_(0,0) = std_radr_*std_radr_;
 	  P_(1,1) = std_radr_*std_radr_;
     }
@@ -98,7 +99,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       /**
       Initialize state.
       */
-      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
+      x_(0,0) = meas_package.raw_measurements_[0];
+	  x_(1,1) = meas_package.raw_measurements_[1];
 	  P_(0,0) = std_laspx_*std_laspx_;
 	  P_(1,1) = std_laspy_*std_laspy_;
     }
@@ -318,7 +320,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   x_ = x_ + K * z_diff;
   P_ = P_ - K*S*K.transpose();
   
-  double NIS = z_diff.transpose()*S.transpose()*z_diff;
+  double NIS = z_diff.transpose()*S.inverse()*z_diff;
   
   //print NIS
   cout << "Lidar NIS: " << NIS << endl;
@@ -413,7 +415,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   x_ = x_ + K * z_diff;
   P_ = P_ - K*S*K.transpose();
   
-  double NIS = z_diff.transpose()*S.transpose()*z_diff;
+  double NIS = z_diff.transpose()*S.inverse()*z_diff;
   
   //print NIS
   cout << "Radar NIS: " << NIS << endl;
