@@ -87,11 +87,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
-      float px = meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]);
-      float py = meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
+      float px = meas_package.raw_measurements_(0)*cos(meas_package.raw_measurements_(1));
+      float py = meas_package.raw_measurements_(0)*sin(meas_package.raw_measurements_(1));
     
-      x_(0,0) = px;
-	  x_(1,1) = py;
+      x_(0) = px;
+	  x_(1) = py;
 	  P_(0,0) = std_radr_*std_radr_;
 	  P_(1,1) = std_radr_*std_radr_;
     }
@@ -99,8 +99,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       /**
       Initialize state.
       */
-      x_(0,0) = meas_package.raw_measurements_[0];
-	  x_(1,1) = meas_package.raw_measurements_[1];
+      x_(0) = meas_package.raw_measurements_(0);
+	  x_(1) = meas_package.raw_measurements_(1);
 	  P_(0,0) = std_laspx_*std_laspx_;
 	  P_(1,1) = std_laspy_*std_laspy_;
     }
