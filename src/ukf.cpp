@@ -78,35 +78,35 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   Complete this function! Make sure you switch between lidar and radar
   measurements.
   */
-  
-  // first measurement
-  x_ << 1, 1, 1, 1, 1;
-  P_ = MatrixXd::Identity(5,5);
-  
-  if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
-    /**
-    Convert radar from polar to cartesian coordinates and initialize state.
-    */
-    float px = meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]);
-    float py = meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
-  
-    x_ << px, py, 0, 0, 0;
-	P_(0,0) = std_radr_*std_radr_;
-	P_(1,1) = std_radr_*std_radr_;
+  if (!is_initialized_) {
+    // first measurement
+    x_ << 1, 1, 1, 1, 1;
+    P_ = MatrixXd::Identity(5,5);
+    
+    if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+      /**
+      Convert radar from polar to cartesian coordinates and initialize state.
+      */
+      float px = meas_package.raw_measurements_[0]*cos(meas_package.raw_measurements_[1]);
+      float py = meas_package.raw_measurements_[0]*sin(meas_package.raw_measurements_[1]);
+    
+      x_ << px, py, 0, 0, 0;
+	  P_(0,0) = std_radr_*std_radr_;
+	  P_(1,1) = std_radr_*std_radr_;
+    }
+    else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
+      /**
+      Initialize state.
+      */
+      x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
+	  P_(0,0) = std_laspx_*std_laspx_;
+	  P_(1,1) = std_laspy_*std_laspy_;
+    }
+    time_us_ = meas_package.timestamp_;
+    // done initializing, no need to predict or update
+    is_initialized_ = true;
+    return;
   }
-  else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
-    /**
-    Initialize state.
-    */
-    x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
-	P_(0,0) = std_laspx_*std_laspx_;
-	P_(1,1) = std_laspy_*std_laspy_;
-  }
-  time_us_ = meas_package.timestamp_;
-  // done initializing, no need to predict or update
-  is_initialized_ = true;
-  return;
-  
   double dt = (meas_package.timestamp_ - time_us_) / 1000000.0;	//dt - expressed in seconds
   time_us_ = meas_package.timestamp_;
   
